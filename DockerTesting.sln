@@ -14,6 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{70F975ED-F0E5-4EC1-AF78-42FFC13DCB2D}"
 	ProjectSection(SolutionItems) = preProject
 		build\docker\Dockerfile.tests = build\docker\Dockerfile.tests
+		build\docker\Dockerfile.web = build\docker\Dockerfile.web
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{77DEB985-722B-4747-A592-192E9BE65906}"
