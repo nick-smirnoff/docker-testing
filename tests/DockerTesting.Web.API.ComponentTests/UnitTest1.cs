@@ -1,4 +1,4 @@
-namespace DockerTesting.Web.API.UnitTests
+namespace DockerTesting.Web.API.ComponentTests
 {
     public class UnitTest1
     {
