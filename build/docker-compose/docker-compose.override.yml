@@ -1,0 +1,17 @@
+version: '3.5'
+
+services:
+  docker-testing:
+    image: docker-testing:dev
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_HTTPS_PORT=5050
+      - Kestrel__Certificates__Default__Path=/https/${PFX_CERTIFICATE_NAME}
+      - Kestrel__Certificates__Default__Password=${PFX_CERTIFICATE_PASSWORD}
+    ports:
+      - '5050:443'
+      - '5051:80'
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
