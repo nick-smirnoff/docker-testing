@@ -1,0 +1,13 @@
+version: '3.5'
+
+services:
+  docker-testing-demo-tests:
+    image: docker-testing-demo-tests
+    build:
+      context: ../..
+      dockerfile: build/docker/Dockerfile.tests
+      # uncomment appropriate target for scoped tests
+      # target: component-test-runner
+      # target: unit-test-runner
+    volumes:
+      - '../../.results:/.results:rw'

@@ -1,0 +1,19 @@
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+COPY ["DockerTesting.sln", "./"]
+COPY ["build/docker-compose/docker-compose.dcproj", "build/docker-compose/"]
+COPY ["src/DockerTesting.Web.API/DockerTesting.Web.API.csproj", "src/DockerTesting.Web.API/"]
+COPY ["tests/DockerTesting.Web.API.ComponentTests/DockerTesting.Web.API.ComponentTests.csproj", "tests/DockerTesting.Web.API.ComponentTests/"]
+COPY ["tests/DockerTesting.Web.API.UnitTests/DockerTesting.Web.API.UnitTests.csproj", "tests/DockerTesting.Web.API.UnitTests/"]
+RUN dotnet restore "DockerTesting.sln"
+COPY ["src/", "src/"]
+COPY ["tests/", "tests/"]
+RUN dotnet build "DockerTesting.sln" --configuration "Release" --no-restore
+
+FROM build as component-test-runner
+ENTRYPOINT ["dotnet", "test", "--filter", "category=component", "--configuration", "Release", "--no-build", "--results-directory", "/.results"]
+
+FROM build as unit-test-runner
+ENTRYPOINT ["dotnet", "test", "--filter", "category=unit", "--configuration", "Release", "--no-build", "--results-directory", "/.results"]
+
+FROM build as test-runner
+ENTRYPOINT ["dotnet", "test", "--configuration", "Release", "--no-build", "--results-directory", "/.results"]
