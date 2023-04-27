@@ -1,0 +1,8 @@
+version: '3.5'
+
+services:
+  docker-testing-demo:
+    image: docker-testing-demo
+    build:
+      context: ../..
+      dockerfile: build/docker/Dockerfile.web

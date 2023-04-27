@@ -1,0 +1,19 @@
+version: '3.5'
+
+services:
+  docker-testing-demo:
+    image: docker-testing-demo:dev
+    labels:
+      com.microsoft.visual-studio.project-name: "DockerTesting.Web.API"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_HTTPS_PORT=6060
+      - Kestrel__Certificates__Default__Path=/root/.aspnet/https/${PFX_CERTIFICATE_NAME}
+      - Kestrel__Certificates__Default__Password=${PFX_CERTIFICATE_PASSWORD}
+    ports:
+      - '6060:443'
+      - '6061:80'
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

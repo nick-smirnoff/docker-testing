@@ -1,0 +1,1 @@
+[assembly: AssemblyTrait("category", "component")]

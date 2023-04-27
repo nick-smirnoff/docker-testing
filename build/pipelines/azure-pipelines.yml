@@ -1,0 +1,55 @@
+trigger:
+  branches:
+    include:
+      - 'master'
+  paths:
+    exclude:
+      - 'docs/**'
+
+pr:
+  branches:
+    include:
+      - 'master'
+  paths:
+    exclude:
+      - 'docs/**'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  DOCKER_WEB_DOCKERFILE: 'build/docker/Dockerfile.web'
+  DOCKER_WEB_IMAGE: 'docker-testing-demo:$(Build.BuildId)'
+  DOCKER_TESTS_DOCKERFILE: 'build/docker/Dockerfile.tests'
+  DOCKER_TESTS_IMAGE: 'docker-testing-demo-tests:$(Build.BuildId)'
+
+stages:
+  - stage: 'CONTINUOUS_INTEGRATION'
+    displayName: 'Continuous Integration'
+    jobs:
+      - job: BUILD_AND_TEST
+        displayName: 'Build & Test'
+        steps:
+          - task: Docker@2
+            displayName: 'Build Docker image'
+            inputs:
+              command: 'build'
+              Dockerfile: '$(DOCKER_TESTS_DOCKERFILE)'
+              buildContext: '.'
+              arguments: >
+                --tag $(DOCKER_TESTS_IMAGE)
+
+          - script: |
+              docker run --rm --volume "$(Agent.TempDirectory)/.results:/.results" $(DOCKER_TESTS_IMAGE)
+            displayName: 'Run tests'
+
+          - task: PublishTestResults@2
+            displayName: Publish test results
+            inputs:
+              testRunner: VSTest
+              testResultsFiles: '**/*.trx'
+              searchFolder: '$(Agent.TempDirectory)/.results'
+              mergeTestResults: true
+              failTaskOnFailedTests: true
+              buildConfiguration: 'Release'
+            condition: succeededOrFailed()
