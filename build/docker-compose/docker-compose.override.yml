@@ -6,12 +6,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+;http://+
-      - ASPNETCORE_HTTPS_PORT=5050
-      - Kestrel__Certificates__Default__Path=/https/${PFX_CERTIFICATE_NAME}
-      - Kestrel__Certificates__Default__Password=${PFX_CERTIFICATE_PASSWORD}
+      - ASPNETCORE_HTTPS_PORT=6060
     ports:
-      - '5050:443'
-      - '5051:80'
+      - '6060:443'
+      - '6061:80'
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

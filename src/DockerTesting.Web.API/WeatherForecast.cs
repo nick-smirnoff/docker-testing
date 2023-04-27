@@ -1,3 +1,5 @@
+using System;
+
 namespace DockerTesting.Web.API
 {
     public class WeatherForecast

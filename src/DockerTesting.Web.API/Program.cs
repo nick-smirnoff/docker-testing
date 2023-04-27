@@ -1,23 +1,26 @@
-var builder = WebApplication.CreateBuilder(args);
+using DockerTesting.Web.API;
+using Microsoft.AspNetCore.Builder;
+using Serilog;
+using System;
 
-// Add services to the container.
+Log.Logger = HostingExtensions.CreateSerilogLogger();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    Log.Information("Starting up...");
+    var builder = WebApplication.CreateBuilder(args);
+    builder.ConfigureServices();
+
+    var application = builder.Build();
+    application.ConfigurePipeline();
+    application.Run();
 }
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+catch (Exception exception)
+{
+    Log.Fatal(exception, "Host terminated unexpectedly.");
+}
+finally
+{
+    Log.Information("Shut down complete.");
+    Log.CloseAndFlush();
+}
